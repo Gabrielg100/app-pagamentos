@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicativo de Pagamentos</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1>Aplicativo de Pagamentos</h1>
+
+    <h2>Novo pagamento</h2>
+
+    <div class="formulario"></div>
+
+    <input type="text" id="nome" placeholder="Nome">
+    <input type="number" id="valor" placeholder="Valor">
+    <input type="date" id="vencimento" required>
+    <select id="metodo">
+    <option value="">Selecione o método</option>
+    <option value="Cartão">Cartão</option>
+    <option value="Pix">Pix</option>
+    <option value="Dinheiro">Dinheiro</option>
+</select>
+
+    <button class="btn-adicionar" onclick="criarPagamento()">Adicionar pagamento</button>
+
+    </div>
+
+    <h2>Pagamentos</h2>
+
+    <input
+    type="text"
+    id="busca"
+    placeholder="Buscar pagamento pelo nome"
+    oninput="carregarPagamentos()"
+>
+<select id="filtroStatus" onchange="carregarPagamentos()">
+    <option value="">Todos os status</option>
+    <option value="Pendente">Pendente</option>
+    <option value="Pago">Pago</option>
+    <option value="Inadimplente">Inadimplente</option>
+    <option value="Parou de pagar">Parou de pagar</option>
+</select>
+<p id="totalPagamentos">Total: R$ 0</p>
+<div id="painelResumo">
+    <div id="graficoPagamentos">
+    <h2>Visão geral dos pagamentos</h2>
+    <div id="barrasGrafico"></div>
+<button onclick="exportarExcel()">Exportar para Excel</button>
+</div>
+    <div class="cartao-resumo pago">
+        <h3>Total pago</h3>
+        <p id="totalPago">R$ 0,00</p>
+    </div>
+
+    <div class="cartao-resumo pendente">
+        <h3>Total pendente</h3>
+        <p id="totalPendente">R$ 0,00</p>
+    </div>
+
+    <div class="cartao-resumo inadimplente">
+        <h3>Total inadimplente</h3>
+        <p id="totalInadimplente">R$ 0,00</p>
+    </div>
+
+    <div class="cartao-resumo parou">
+        <h3>Parou de pagar</h3>
+        <p id="totalParou">R$ 0,00</p>
+    </div>
+</div>
+
+    <ul id="listaPagamentos"></ul>
+
+    <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
+    <script>
+        async function carregarPagamentos() {
+            const resposta = await fetch("http://localhost:3000/pagamentos");
+            const dados = await resposta.json();
+
+            const lista = document.getElementById("listaPagamentos");
+            lista.innerHTML = "";
+
+            const busca = document.getElementById("busca").value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            const filtroStatus = document.getElementById("filtroStatus").value;
+
+            const pagamentosFiltrados = dados.pagamentos.filter(pagamento => {
+    const nomeNormalizado = pagamento.nome
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+
+    const combinaNome = nomeNormalizado.includes(busca);
+    const statusAtual = pagamento.status || "Pendente";
+    const combinaStatus = filtroStatus === "" || statusAtual === filtroStatus;
+
+    return combinaNome && combinaStatus;
+});
+
+const total = pagamentosFiltrados.reduce((soma, pagamento) => {
+    return soma + Number(pagamento.valor);
+}, 0);
+
+document.getElementById("totalPagamentos").textContent =
+    `Total: R$ ${total.toFixed(2).replace(".", ",")}`
+    const formatarReais = valor =>
+    `R$ ${valor.toFixed(2).replace(".", ",")}`;
+
+const somarPorStatus = status =>
+    dados.pagamentos
+        .filter(p => (p.status || "Pendente") === status)
+        .reduce((soma, p) => soma + Number(p.valor), 0);
+
+document.getElementById("totalPago").textContent =
+    formatarReais(somarPorStatus("Pago"));
+
+document.getElementById("totalPendente").textContent =
+    formatarReais(somarPorStatus("Pendente"));
+
+document.getElementById("totalInadimplente").textContent =
+    formatarReais(somarPorStatus("Inadimplente"));
+
+document.getElementById("totalParou").textContent =
+    formatarReais(somarPorStatus("Parou de pagar"));
+
+    const valoresGrafico = [
+    { nome: "Pago", valor: somarPorStatus("Pago"), cor: "#39ff14" },
+    { nome: "Pendente", valor: somarPorStatus("Pendente"), cor: "#ffff00" },
+    { nome: "Inadimplente", valor: somarPorStatus("Inadimplente"), cor: "#ff073a" },
+{ nome: "Parou de pagar", valor: somarPorStatus("Parou de pagar"), cor: "#9ca3af" }
+];
+
+const maiorValor = Math.max(
+    ...valoresGrafico.map(item => item.valor),
+    1
+);
+
+const barrasGrafico = document.getElementById("barrasGrafico");
+barrasGrafico.innerHTML = "";
+
+valoresGrafico.forEach(item => {
+    const linha = document.createElement("div");
+    linha.className = "linha-grafico";
+
+    const largura = (item.valor / maiorValor) * 100;
+
+    linha.innerHTML = `
+        <p>${item.nome}: R$ ${item.valor.toFixed(2).replace(".", ",")}</p>
+        <div class="fundo-barra">
+            <div class="barra-valor"
+                 style="width: ${largura}%; background-color: ${item.cor};">
+            </div>
+        </div>
+    `;
+
+    barrasGrafico.appendChild(linha);
+});
+
+           if (pagamentosFiltrados.length === 0) {
+            lista.innerHTML = '<p class="mensagem-vazia">Nenhum pagamento encontrado.</p>';
+            return;
+           }
+
+        pagamentosFiltrados.forEach(pagamento => {
+    const item = document.createElement("li");
+
+    const status = pagamento.status || "Pendente";
+    const seletorStatus = document.createElement("select");
+
+["Pendente", "Pago", "Inadimplente", "Parou de pagar"].forEach(opcao => {
+    const itemOpcao = document.createElement("option");
+    itemOpcao.value = opcao;
+    itemOpcao.textContent = opcao;
+    seletorStatus.appendChild(itemOpcao);
+});
+
+seletorStatus.value = status;
+const bolinhaStatus = document.createElement("span");
+bolinhaStatus.style.display = "inline-block";
+bolinhaStatus.style.width = "12px";
+bolinhaStatus.style.height = "12px";
+bolinhaStatus.style.borderRadius = "50%";
+bolinhaStatus.style.marginRight = "8px";
+bolinhaStatus.style.flexShrink = "0";
+bolinhaStatus.style.verticalAlign = "middle";
+if (status === "Pago") {
+    bolinhaStatus.style.backgroundColor = "#39FF14";
+    bolinhaStatus.style.boxShadow = "0 0 10px #39FF14";
+} else if (status === "Pendente") {
+    bolinhaStatus.style.backgroundColor = "#FFFF00";
+    bolinhaStatus.style.boxShadow = "0 0 10px #FFFF00";
+} else if (status === "Inadimplente") {
+    bolinhaStatus.style.backgroundColor = "#FF073A";
+    bolinhaStatus.style.boxShadow = "0 0 10px #FF073A";
+} else {
+    bolinhaStatus.style.backgroundColor = "#B0B0B0";
+    bolinhaStatus.style.boxShadow = "0 0 10px #B0B0B0";
+}
+function atualizarCorStatus() {
+    const statusAtual = seletorStatus.value;
+    if (seletorStatus.value === "Pago") {
+        seletorStatus.style.backgroundColor = "#111827";
+    } else if (seletorStatus.value === "Pendente") {
+        seletorStatus.style.backgroundColor = "#111827";
+    } else if (seletorStatus.value === "Inadimplente") {
+        seletorStatus.style.backgroundColor = "#111827";
+    } else if (seletorStatus.value === "Parou de pagar") {
+        seletorStatus.style.backgroundColor = "#111827";
+    }
+}
+
+atualizarCorStatus();
+seletorStatus.addEventListener("change", async () => {
+    atualizarCorStatus();
+    const resposta = await fetch(`http://localhost:3000/pagamentos/${pagamento.id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            nome: pagamento.nome,
+            valor: pagamento.valor,
+            metodo: pagamento.metodo,
+            status: seletorStatus.value
+        })
+    });
+
+    if (resposta.ok) {
+        pagamento.status = seletorStatus.value;
+        alert("Status atualizado com sucesso!");
+    } else {
+        alert("Erro ao atualizar o status.");
+    }
+});
+    item.innerHTML = `
+<strong>${pagamento.nome}</strong> - <strong>R$ ${Number(pagamento.valor).toFixed(2).replace(".", ",")}</strong> - <strong>${pagamento.metodo}</strong>
+ - <strong>Status:</strong> ${status}`;
+
+    const botaoExcluir = document.createElement("button");
+    botaoExcluir.textContent = "Excluir";
+
+    botaoExcluir.onclick = async () => {
+        const confirmar = confirm("Tem certeza que deseja excluir este pagamento?");
+
+if (!confirmar) {
+    return;
+}
+
+        await fetch(`http://localhost:3000/pagamentos/${pagamento.id}`, {
+            method: "DELETE"
+        });
+
+        alert("Pagamento excluído com sucesso!");
+
+        carregarPagamentos();
+    };
+const botaoEditar = document.createElement("button");
+botaoEditar.textContent = "Editar";
+
+botaoEditar.onclick = async () => {
+    const nome = prompt("Digite o novo nome:", pagamento.nome);
+    const valor = prompt("Digite o novo valor:", pagamento.valor);
+    const metodo = prompt("Digite o novo método:", pagamento.metodo);
+
+    if (nome && valor && metodo) {
+        await fetch(`http://localhost:3000/pagamentos/${pagamento.id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                nome,
+                valor: Number(valor),
+                metodo
+            })
+        });
+
+        alert("Pagamento editado com sucesso!");
+
+        carregarPagamentos();
+    }
+};
+
+item.appendChild(botaoEditar);
+    item.appendChild(botaoExcluir);
+    item.appendChild(bolinhaStatus);
+    item.appendChild(seletorStatus);
+
+
+    lista.appendChild(item);
+});
+        }
+
+        async function criarPagamento() {
+            const nome = document.getElementById("nome").value;
+            const valor = Number(document.getElementById("valor").value);
+            const metodo = document.getElementById("metodo").value;
+            const vencimento = document.getElementById("vencimento").value;
+        
+            if (!nome || !valor || !metodo || !vencimento) {
+    alert("Preencha todos os campos!");
+    return;
+}
+if (valor <= 0) {
+    alert("O valor deve ser maior que zero!");
+    return;
+}
+
+            await fetch("http://localhost:3000/pagamentos", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    nome,
+                    valor,
+                    metodo,
+                    vencimento,
+                })
+            });
+
+            alert("Pagamento adicionado com sucesso!");
+
+          document.getElementById("nome").value = "";
+document.getElementById("valor").value = "";
+document.getElementById("metodo").value = "";
+document.getElementById("busca").value = "";
+
+        carregarPagamentos();
+        }
+    carregarPagamentos();
+    
+
+function exportarExcel() {
+    fetch("http://localhost:3000/pagamentos")
+        .then(resposta => resposta.json())
+        .then(dados => {
+            const pagamentos = dados.pagamentos;
+
+            pagamentos.sort((a, b) =>
+                (a.nome || "").localeCompare(b.nome || "", "pt-BR", {
+                    sensitivity: "base"
+                })
+            );
+
+            const linhas = pagamentos.map(pagamento => ({
+                "Nome": pagamento.nome || "",
+                "Valor (R$)": Number(pagamento.valor || 0),
+                "Método": pagamento.metodo || "",
+                "Status": pagamento.status || "Pendente"
+            }));
+
+            const totalGeral = pagamentos.reduce(
+                (soma, pagamento) =>
+                    soma + Number(pagamento.valor || 0),
+                0
+            );
+
+            linhas.push({
+                "Nome": "TOTAL GERAL",
+                "Valor (R$)": totalGeral,
+                "Método": "",
+                "Status": ""
+            });
+
+            const linhaTotal = linhas.length;
+            const planilha = XLSX.utils.json_to_sheet(linhas);
+            planilha["!autofilter"] = {
+    ref: planilha["!ref"]
+};
+
+            planilha["!cols"] = [
+                { wch: 30 },
+                { wch: 15 },
+                { wch: 20 },
+                { wch: 22 }
+            ];
+
+            const pastaTrabalho = XLSX.utils.book_new();
+            const celulaTotal = XLSX.utils.encode_cell({
+    r: linhaTotal,
+    c: 0
+});
+
+if (planilha[celulaTotal]) {
+    planilha[celulaTotal].s = {
+        font: { bold: true },
+        fill: {
+            patternType: "solid",
+            fgColor: { rgb: "39FF14" }
+        }
+    };
+}
+
+            XLSX.utils.book_append_sheet(
+                pastaTrabalho,
+                planilha,
+                "Pagamentos"
+            );
+
+            const intervalo = XLSX.utils.decode_range(planilha["!ref"]);
+
+            for (let linha = 1; linha <= intervalo.e.r; linha++) {
+                const celula = planilha[XLSX.utils.encode_cell({
+                    r: linha,
+                    c: 1
+                })];
+
+                if (celula) {
+                    celula.z = '"R$" #,##0.00';
+                }
+            }
+
+            XLSX.writeFile(pastaTrabalho, "pagamentos.xlsx");
+        })
+        .catch(() => {
+            alert("Não foi possível exportar. Verifique se o servidor está funcionando.");
+        });
+}
+
+
+    </script>
+
+</body>
+</html>

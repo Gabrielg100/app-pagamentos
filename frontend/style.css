@@ -1,0 +1,440 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    margin: 0;
+    padding: 30px;
+}
+
+h1 {
+    color: #222;
+}
+
+h2 {
+    color: #333;
+}
+
+input {
+    padding: 10px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px 15px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+li {
+    background-color: white;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+h1 {
+    text-align: center;
+}
+
+h2 {
+    margin-top: 25px;
+}
+
+input {
+    display: block;
+    width: 300px;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #222;
+    color: white;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+ul {
+    padding: 0;
+    max-width: 600px;
+}
+
+li {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+li button {
+    margin-left: 5px;
+}
+.formulario {
+    background-color: white;
+    padding: 20px;
+    max-width: 400px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+#listaPagamentos {
+    background-color: white;
+    padding: 20px;
+    max-width: 600px;
+    border-radius: 10px;
+}
+#listaPagamentos li {
+    border-bottom: 1px solid #ddd;
+    padding: 15px 0;
+}
+
+#listaPagamentos li:last-child {
+    border-bottom: none;
+}
+#listaPagamentos {
+    list-style: none;
+    margin: 0;
+}
+#listaPagamentos button {
+    padding: 7px 12px;
+    font-size: 14px;
+}
+.formulario {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#listaPagamentos {
+    margin-left: auto;
+    margin-right: auto;
+}
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+h2 {
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+#totalPagamentos {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    margin: 20px 0;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+}
+.mensagem-vazia {
+    text-align: center;
+    font-weight: bold;
+    margin-top: 20px;
+}
+#listaPagamentos li {
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+}
+#listaPagamentos li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+#listaPagamentos li button {
+    margin-left: 5px;
+}
+#listaPagamentos li button {
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+#listaPagamentos li button:first-of-type {
+    background-color: #007bff;
+    color: white;
+}
+#listaPagamentos li button:last-of-type {
+    background-color: #dc3545;
+    color: white;
+}
+#listaPagamentos li button:hover {
+    opacity: 0.6;
+}
+#listaPagamentos li {
+    border: 1px solid #ddd;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+}
+#listaPagamentos li {
+    font-size: 17px;
+}
+#busca {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+#busca:focus {
+    outline: none;
+    border: 2px solid #007bff;
+}
+.btn-adicionar {
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+.btn-adicionar {
+    background-color: #28a745;
+    color: white;
+    border: none;
+}
+.btn-adicionar:hover {
+    opacity: 0.6;
+}
+h1 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+select {
+    padding: 8px;
+    margin: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    font-size: 14px;
+}
+/* Centralizar o conteúdo principal */
+body {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* Organizar cada pagamento */
+#listaPagamentos li {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    box-sizing: border-box;
+}
+
+/* Evitar que a bolinha seja espremida */
+#listaPagamentos li span {
+    flex-shrink: 0;
+}
+
+/* Organizar o seletor de status */
+#listaPagamentos li select {
+    background-color: #ffffff;
+    color: #222222;
+    border: 1px solid #cccccc;
+    border-radius: 6px;
+    padding: 8px;
+    margin: 0;
+    max-width: 100%;
+}
+h1,
+h2 {
+    text-align: center;
+}
+
+.formulario {
+    text-align: center;
+}
+
+#listaPagamentos li {
+    text-align: center;
+}
+
+#totalPagamentos {
+    text-align: center;
+}
+/* Tema escuro neon */
+body {
+    background-color: #0b1020;
+    color: #f5f7ff;
+}
+
+h1 {
+    color: #39ff14;
+    text-shadow: 0 0 10px #39ff1466;
+}
+
+h2 {
+    color: #00e5ff;
+}
+
+#totalPagamentos {
+    background-color: #111827;
+    color: #39ff14;
+    border: 1px solid #39ff14;
+    box-shadow: 0 0 10px #39ff1433;
+}
+/* Cartões de pagamentos no tema escuro */
+#listaPagamentos {
+    background-color: #0b1020;
+}
+
+#listaPagamentos li {
+    background-color: #111827;
+    color: #f5f7ff;
+    border: 1px solid #263247;
+    border-radius: 10px;
+    box-shadow: 0 0 8px #00e5ff22;
+}
+
+#listaPagamentos li strong {
+    color: #f5f7ff;
+}
+
+/* Campo de busca */
+#busca {
+    background-color: #111827;
+    color: #f5f7ff;
+    border: 1px solid #00e5ff;
+}
+
+#busca::placeholder {
+    color: #aab4c5;
+}
+/* Campos escuros com texto claro */
+input,
+select {
+    background-color: #111827;
+    color: #f5f7ff;
+    border: 1px solid #00e5ff;
+}
+
+/* Texto de orientação dos campos */
+input::placeholder {
+    color: #aab4c5;
+    opacity: 1;
+}
+
+/* Opções dos seletores */
+select option {
+    background-color: #111827;
+    color: #f5f7ff;
+}
+
+/* Destaque ao clicar nos campos */
+input:focus,
+select:focus {
+    outline: none;
+    border-color: #39ff14;
+    box-shadow: 0 0 6px #39ff1466;
+}
+
+/* Fundo escuro para a área da lista */
+#listaPagamentos {
+    background-color: #0b1020;
+}
+
+/* Texto das mensagens e pagamentos */
+#listaPagamentos li,
+#listaPagamentos li strong {
+    color: #f5f7ff;
+}
+.formulario {
+    background-color: transparent;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+    height: 0;
+}
+/* Centralizar os campos de cadastro */
+#nome,
+#valor,
+#metodo,
+.btn-adicionar {
+    display: block;
+    margin: 10px auto;
+}
+
+#nome,
+#valor {
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
+}
+
+#metodo {
+    max-width: 400px;
+}
+
+.btn-adicionar {
+    display: block;
+}
+/* Efeito neon nos cartões de pagamento */
+#listaPagamentos li {
+    transition: all 0.3s ease;
+}
+
+/* Brilho ao passar o mouse */
+#listaPagamentos li:hover {
+    border-color: #00e5ff;
+    box-shadow:
+        0 0 8px #00e5ff55,
+        0 0 18px #00e5ff22;
+    transform: translateY(-2px);
+}
+
+/* Brilho suave nos botões */
+#listaPagamentos li button {
+    transition: all 0.3s ease;
+}
+
+#listaPagamentos li button:hover {
+    box-shadow: 0 0 10px #00e5ff66;
+    transform: scale(1.04);
+}
+
+/* Gráfico de pagamentos neon */
+#graficoPagamentos {
+    margin: 30px auto;
+    padding: 20px;
+    max-width: 800px;
+    background: #111a2e;
+    border: 1px solid #39ff14;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
+}
+
+#graficoPagamentos h2 {
+    color: #39ff14;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.linha-grafico {
+    margin-bottom: 20px;
+}
+
+.linha-grafico p {
+    color: #ffffff;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.fundo-barra {
+    width: 100%;
+    height: 18px;
+    background: #26334d;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.barra-valor {
+    height: 100%;
+    border-radius: 10px;
+    box-shadow: 0 0 10px currentColor;
+    transition: width 0.5s ease;
+}
